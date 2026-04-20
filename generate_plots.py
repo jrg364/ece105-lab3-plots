@@ -96,13 +96,39 @@ def plot_histogram(sensor_a, sensor_b, ax):
     ax.grid(True, linestyle="--", alpha=0.3)
 
 
+def plot_boxplot(sensor_a, sensor_b, ax):
+    """Draw a boxplot comparing two sensor temperature distributions.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        Temperature readings from sensor A.
+    sensor_b : numpy.ndarray
+        Temperature readings from sensor B.
+    ax : matplotlib.axes.Axes
+        Matplotlib Axes object to modify in place.
+
+    Returns
+    -------
+    None
+        The function updates the provided Axes object and does not return a value.
+    """
+    ax.boxplot([sensor_a, sensor_b], labels=["Sensor A", "Sensor B"], patch_artist=True,
+               boxprops=dict(facecolor="#ffffff", edgecolor="#333333"),
+               medianprops=dict(color="#ff7f0e"),
+               flierprops=dict(marker="o", markerfacecolor="#1f77b4", alpha=0.6, markersize=5))
+    ax.set_title("Sensor Temperature Boxplot")
+    ax.set_ylabel("Temperature (°C)")
+    ax.grid(True, linestyle="--", alpha=0.3, axis="y")
+
+
 def main():
     """Generate sensor data, draw plots, and save the figure.
 
     This function generates reproducible synthetic sensor readings,
-    creates a 1x3 subplot figure, draws the scatter plot and histogram
-    plots on the provided Axes objects, adjusts the layout, and saves
-    the resulting figure to disk.
+    creates a 1x3 subplot figure, draws the scatter, histogram, and
+    boxplot panels on the provided Axes objects, adjusts the layout,
+    and saves the resulting figure to disk.
 
     Returns
     -------
@@ -112,14 +138,12 @@ def main():
     """
     sensor_a, sensor_b, timestamps = generate_data(seed=42)
 
-    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(15, 4), constrained_layout=False)
-    scatter_ax, hist_ax, _ = axes
+    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(18, 4), constrained_layout=False)
+    scatter_ax, hist_ax, box_ax = axes
 
     plot_scatter(sensor_a, sensor_b, timestamps, scatter_ax)
     plot_histogram(sensor_a, sensor_b, hist_ax)
-
-    # Empty third panel can be reused or hidden for a simple layout.
-    axes[2].axis('off')
+    plot_boxplot(sensor_a, sensor_b, box_ax)
 
     fig.tight_layout()
     fig.savefig("sensor_analysis.png", dpi=150, bbox_inches="tight")
