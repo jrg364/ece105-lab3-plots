@@ -126,9 +126,9 @@ def main():
     """Generate sensor data, draw plots, and save the figure.
 
     This function generates reproducible synthetic sensor readings,
-    creates a 1x3 subplot figure, draws the scatter, histogram, and
-    boxplot panels on the provided Axes objects, adjusts the layout,
-    and saves the resulting figure to disk.
+    creates a 2x2 subplot figure, draws the scatter, histogram, and
+    boxplot panels on the provided Axes objects, adds a summary statistics
+    panel, adjusts the layout, and saves the resulting figure to disk.
 
     Returns
     -------
@@ -138,12 +138,23 @@ def main():
     """
     sensor_a, sensor_b, timestamps = generate_data(seed=42)
 
-    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(18, 4), constrained_layout=False)
-    scatter_ax, hist_ax, box_ax = axes
+    fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(14, 10), constrained_layout=False)
+    scatter_ax, hist_ax = axes[0]
+    box_ax, summary_ax = axes[1]
 
     plot_scatter(sensor_a, sensor_b, timestamps, scatter_ax)
     plot_histogram(sensor_a, sensor_b, hist_ax)
     plot_boxplot(sensor_a, sensor_b, box_ax)
+
+    summary_text = (
+        f"Sensor A mean: {sensor_a.mean():.2f} °C\n"
+        f"Sensor A std: {sensor_a.std():.2f} °C\n\n"
+        f"Sensor B mean: {sensor_b.mean():.2f} °C\n"
+        f"Sensor B std: {sensor_b.std():.2f} °C"
+    )
+    summary_ax.text(0.5, 0.5, summary_text, ha='center', va='center', fontsize=12)
+    summary_ax.set_title('Summary Statistics')
+    summary_ax.axis('off')
 
     fig.tight_layout()
     fig.savefig("sensor_analysis.png", dpi=150, bbox_inches="tight")
