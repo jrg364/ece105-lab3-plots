@@ -66,3 +66,30 @@ def plot_scatter(sensor_a, sensor_b, timestamps, ax):
     ax.set_ylabel("Temperature (°C)")
     ax.legend()
     ax.grid(True, linestyle="--", alpha=0.3)
+
+
+def plot_histogram(sensor_a, sensor_b, ax):
+    """Draw a histogram of both sensor temperature distributions on an Axes.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        Temperature readings from sensor A.
+    sensor_b : numpy.ndarray
+        Temperature readings from sensor B.
+    ax : matplotlib.axes.Axes
+        Matplotlib Axes object to modify in place.
+
+    Returns
+    -------
+    None
+        The function updates the provided Axes object and does not return a value.
+    """
+    bins = 20
+    ax.hist(sensor_a, bins=bins, alpha=0.7, label="Sensor A", color="#1f77b4")
+    ax.hist(sensor_b, bins=bins, alpha=0.7, label="Sensor B", color="#ff7f0e")
+    ax.set_title("Sensor Temperature Distribution")
+    ax.set_xlabel("Temperature (°C)")
+    ax.set_ylabel("Frequency")
+    ax.legend()
+    ax.grid(True, linestyle="--", alpha=0.3)
